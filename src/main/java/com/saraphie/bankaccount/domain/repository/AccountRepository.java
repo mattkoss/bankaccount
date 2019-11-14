@@ -1,7 +1,7 @@
 package com.saraphie.bankaccount.domain.repository;
 
 import com.saraphie.bankaccount.domain.Account;
-import com.saraphie.bankaccount.endpoint.rest.dto.AccountId;
+import com.saraphie.bankaccount.domain.AccountId;
 
 public interface AccountRepository {
 

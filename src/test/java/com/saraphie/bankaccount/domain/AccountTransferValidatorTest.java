@@ -5,7 +5,6 @@ import javax.validation.ValidationException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.saraphie.bankaccount.endpoint.rest.dto.AccountId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

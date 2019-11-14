@@ -3,10 +3,13 @@ package com.saraphie.bankaccount.domain.repository;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import javax.inject.Singleton;
+import javax.ws.rs.NotFoundException;
 
 import com.saraphie.bankaccount.domain.Account;
-import com.saraphie.bankaccount.endpoint.rest.dto.AccountId;
+import com.saraphie.bankaccount.domain.AccountId;
 
+@Singleton
 public class InMemoryAccountRepository implements AccountRepository {
 
     private HashMap<AccountId, Account> accountStore;
@@ -30,6 +33,10 @@ public class InMemoryAccountRepository implements AccountRepository {
 
     @Override
     public Account getAccount(AccountId accountId) {
-        return accountStore.get(accountId);
+        Account account = accountStore.get(accountId);
+        if (account == null) {
+            throw new NotFoundException("Account " + accountId + " not found");
+        }
+        return account;
     }
 }

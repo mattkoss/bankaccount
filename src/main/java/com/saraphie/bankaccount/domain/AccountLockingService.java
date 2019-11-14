@@ -4,14 +4,12 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import javax.inject.Singleton;
 
-import com.saraphie.bankaccount.endpoint.rest.dto.AccountId;
-
 @Singleton
 public class AccountLockingService {
 
     private static final int MAX_LOCKS = 10000;
 
-    // maintain finite number of locks
+    // maintain finite number of locks, use modulo to maintain reasonable space complexity
     // multiple accounts will then have the same lock, but this is better than using "synchronized"
     private ReadWriteLock[] accountLocks = new ReadWriteLock[MAX_LOCKS];
 
@@ -23,7 +21,7 @@ public class AccountLockingService {
     }
 
     public ReadWriteLock getAccountLock(AccountId accountId) {
-        int lockIndex = accountId.hashCode() % MAX_LOCKS;
+        int lockIndex = Math.abs(accountId.hashCode() % MAX_LOCKS);
         return accountLocks[lockIndex];
     }
 

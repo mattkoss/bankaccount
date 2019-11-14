@@ -1,7 +1,9 @@
 package com.saraphie.bankaccount.domain;
 
+import javax.inject.Singleton;
 import javax.validation.ValidationException;
 
+@Singleton
 public class AccountTransferValidator {
 
     public void validateAccountsForTransfer(Account sourceAccount, Account targetAccount) {

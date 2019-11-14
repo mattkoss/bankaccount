@@ -2,8 +2,6 @@ package com.saraphie.bankaccount.domain;
 
 import java.math.BigDecimal;
 
-import com.saraphie.bankaccount.endpoint.rest.dto.AccountId;
-
 public class Account {
 
     private final AccountId id;

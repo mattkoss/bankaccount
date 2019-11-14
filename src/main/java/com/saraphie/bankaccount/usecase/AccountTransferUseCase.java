@@ -27,7 +27,6 @@ public class AccountTransferUseCase {
     public TransferResponse execute(TransferRequest transferRequest) {
 
         // obtain locks for the source and target accounts
-        // use module to maintain reasonable space complexity
         ReadWriteLock lock = accountLockingService.getAccountLock(transferRequest.getSourceAccount());
         ReadWriteLock lock2 = accountLockingService.getAccountLock(transferRequest.getTargetAccount());
 
