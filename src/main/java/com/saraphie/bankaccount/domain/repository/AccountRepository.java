@@ -1,4 +1,10 @@
 package com.saraphie.bankaccount.domain.repository;
 
-public class AccountRepository {
+import com.saraphie.bankaccount.domain.Account;
+import com.saraphie.bankaccount.endpoint.rest.dto.AccountId;
+
+public interface AccountRepository {
+
+    Account getAccount(AccountId sourceAccount);
+
 }
