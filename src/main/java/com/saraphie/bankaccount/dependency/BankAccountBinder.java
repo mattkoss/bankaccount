@@ -1,5 +1,7 @@
 package com.saraphie.bankaccount.dependency;
 
+import javax.inject.Singleton;
+
 import com.saraphie.bankaccount.domain.AccountLockingService;
 import com.saraphie.bankaccount.domain.AccountTransferValidator;
 import com.saraphie.bankaccount.domain.repository.AccountRepository;
@@ -15,10 +17,10 @@ public class BankAccountBinder extends AbstractBinder {
         bindAsContract(AccountTransferUseCase.class);
         bindAsContract(AccountBalanceUseCase.class);
 
-        bindAsContract(AccountLockingService.class);
-        bindAsContract(AccountTransferValidator.class);
+        bindAsContract(AccountLockingService.class).in(Singleton.class);
+        bindAsContract(AccountTransferValidator.class).in(Singleton.class);
 
-        bind(InMemoryAccountRepository.class).to(AccountRepository.class);
+        bind(InMemoryAccountRepository.class).to(AccountRepository.class).in(Singleton.class);
     }
 
 }
