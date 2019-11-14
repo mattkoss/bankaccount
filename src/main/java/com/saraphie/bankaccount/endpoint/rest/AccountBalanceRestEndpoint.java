@@ -8,7 +8,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.saraphie.bankaccount.endpoint.rest.dto.AccountBalance;
+import com.saraphie.bankaccount.domain.AccountBalance;
 
 @Path("/account-balance")
 public class AccountBalanceRestEndpoint {

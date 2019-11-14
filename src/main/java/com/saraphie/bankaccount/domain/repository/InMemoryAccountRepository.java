@@ -1,21 +1,35 @@
 package com.saraphie.bankaccount.domain.repository;
 
-import java.util.concurrent.locks.ReadWriteLock;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import com.saraphie.bankaccount.domain.Account;
 import com.saraphie.bankaccount.endpoint.rest.dto.AccountId;
 
-public class InMemoryAccountRepository extends LockingAccountRepository implements AccountRepository {
+public class InMemoryAccountRepository implements AccountRepository {
+
+    private HashMap<AccountId, Account> accountStore;
+
+    public InMemoryAccountRepository() {
+        this.accountStore = new LinkedHashMap<>();
+
+        // store some accounts initially
+        AccountId accountId = new AccountId("40-40-40", "12345678");
+        Account account = new Account(accountId, "GBP", new BigDecimal("123"));
+        accountStore.put(accountId, account);
+
+        accountId = new AccountId("50-50-50", "98765432");
+        account = new Account(accountId, "GBP", new BigDecimal("456"));
+        accountStore.put(accountId, account);
+
+        accountId = new AccountId("60-60-60", "11110022");
+        account = new Account(accountId, "USD", new BigDecimal("1024"));
+        accountStore.put(accountId, account);
+    }
 
     @Override
     public Account getAccount(AccountId accountId) {
-        ReadWriteLock lock = getAccountLock(accountId);
-        Account account = getAccountInternal(accountId);
-        return account;
-    }
-
-    private Account getAccountInternal(AccountId accountId) {
-        // TODO: retrieve account;
-        return null;
+        return accountStore.get(accountId);
     }
 }

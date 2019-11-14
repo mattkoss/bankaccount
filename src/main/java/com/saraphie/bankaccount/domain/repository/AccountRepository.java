@@ -5,6 +5,6 @@ import com.saraphie.bankaccount.endpoint.rest.dto.AccountId;
 
 public interface AccountRepository {
 
-    Account getAccount(AccountId sourceAccount);
+    Account getAccount(AccountId accountId);
 
 }

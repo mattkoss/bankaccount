@@ -1,5 +1,6 @@
 package com.saraphie.bankaccount.dependency;
 
+import com.saraphie.bankaccount.domain.AccountLockingService;
 import com.saraphie.bankaccount.endpoint.rest.AccountBalanceRestEndpoint;
 import com.saraphie.bankaccount.endpoint.rest.AccountTransferRestEndpoint;
 import com.saraphie.bankaccount.usecase.AccountTransferUseCase;
@@ -19,6 +20,7 @@ public class BankAccountConfig extends ResourceConfig {
             @Override
             protected void configure() {
                 bindAsContract(AccountTransferUseCase.class);
+                bindAsContract(AccountLockingService.class);
             }
         });
     }
