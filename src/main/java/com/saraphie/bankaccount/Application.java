@@ -21,6 +21,7 @@ public class Application {
         ServletHolder serHol = ctx.addServlet(ServletContainer.class, "/api/*");
         serHol.setInitOrder(1);
         serHol.setInitParameter("jersey.config.server.provider.packages", "com.saraphie.bankaccount.endpoint.rest");
+        serHol.setInitParameter("javax.ws.rs.Application", "com.saraphie.bankaccount.dependency.BankAccountConfig");
 
         try {
             server.start();
