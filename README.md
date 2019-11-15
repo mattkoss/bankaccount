@@ -73,3 +73,12 @@ However, if number of accounts is fairly low, then this number can be increases 
 
 _ReadWriteLock_ locks are used to ensure concurrent read access when no writing occurs.
 
+###### Missing bits
+As mentioned - account repository implementation is read-only.
+
+Transfers should be logged in some persistent store, so that there is a trace/audit trail.
+I.e. some kind of ledger implementation.
+
+
+
+
