@@ -11,9 +11,13 @@ import com.saraphie.bankaccount.domain.AccountTransferValidator;
 import com.saraphie.bankaccount.domain.repository.AccountRepository;
 import com.saraphie.bankaccount.endpoint.rest.dto.TransferRequest;
 import com.saraphie.bankaccount.endpoint.rest.dto.TransferResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class AccountTransferUseCase {
+
+    private final static Logger LOG = LoggerFactory.getLogger(AccountTransferUseCase.class);
 
     @Inject
     private AccountRepository accountRepository;
@@ -25,6 +29,7 @@ public class AccountTransferUseCase {
     private AccountTransferValidator accountTransferValidator;
 
     public TransferResponse execute(TransferRequest transferRequest) {
+        LOG.info("Executing transfer: {}", transferRequest);
 
         // obtain locks for the source and target accounts
         ReadWriteLock lock = accountLockingService.getAccountLock(transferRequest.getSourceAccount());
@@ -40,6 +45,8 @@ public class AccountTransferUseCase {
 
             AccountBalance sourceAccountBalance = sourceAccount.withdraw(transferRequest.getAmount());
             AccountBalance targetAccountBalance = targetAccount.deposit(transferRequest.getAmount());
+
+            LOG.info("Transfer successful: {}, {}", sourceAccountBalance, targetAccountBalance);
 
             return new TransferResponse(sourceAccountBalance, targetAccountBalance);
 

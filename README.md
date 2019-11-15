@@ -50,6 +50,8 @@ I am using Jersey framework for REST endpoints, with the embedded jetty web serv
 
 For dependency injection, I am using Jersey's HK2 package.
 
+Logback via slf4j for all logging.
+
 For testing - JUnit5 and Mockito.
 
 ###### Application bootstrapping and wiring

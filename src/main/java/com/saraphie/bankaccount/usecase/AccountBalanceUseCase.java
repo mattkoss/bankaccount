@@ -9,9 +9,13 @@ import com.saraphie.bankaccount.domain.AccountBalance;
 import com.saraphie.bankaccount.domain.AccountId;
 import com.saraphie.bankaccount.domain.AccountLockingService;
 import com.saraphie.bankaccount.domain.repository.AccountRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class AccountBalanceUseCase {
+
+    private final static Logger LOG = LoggerFactory.getLogger(AccountBalanceUseCase.class);
 
     @Inject
     private AccountLockingService accountLockingService;
@@ -20,6 +24,8 @@ public class AccountBalanceUseCase {
     private AccountRepository accountRepository;
 
     public AccountBalance execute(AccountId accountId) {
+        LOG.info("Querying balance for {}", accountId);
+
         // obtain lock
         ReadWriteLock lock = accountLockingService.getAccountLock(accountId);
 
