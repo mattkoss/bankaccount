@@ -3,6 +3,7 @@ package com.saraphie.bankaccount.usecase;
 import java.math.BigDecimal;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -14,7 +15,6 @@ import com.saraphie.bankaccount.domain.AccountTransferValidator;
 import com.saraphie.bankaccount.domain.repository.AccountRepository;
 import com.saraphie.bankaccount.endpoint.rest.dto.TransferRequest;
 import com.saraphie.bankaccount.endpoint.rest.dto.TransferResponse;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -48,7 +48,7 @@ class AccountTransferUseCaseTest {
         when(repository.getAccount(accountId2)).thenReturn(account2);
 
         TransferResponse response = useCase.execute(request);
-        Assertions.assertEquals(new TransferResponse(new AccountBalance(new BigDecimal("30"), "GBP"),
+        assertEquals(new TransferResponse(new AccountBalance(new BigDecimal("30"), "GBP"),
                 new AccountBalance(new BigDecimal("60"), "GBP")), response);
     }
 }
