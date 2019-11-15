@@ -103,8 +103,6 @@ class AccountLockingServiceTest {
 
         new Thread(workflow1).start();
 
-        sleep(100);
-
         Runnable workflow2 = () -> {
             ReadWriteLock lock = accountLockingService.getAccountLock(accountId);
             assertTrue(lock.readLock().tryLock());
