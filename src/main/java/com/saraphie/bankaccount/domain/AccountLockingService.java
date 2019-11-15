@@ -7,7 +7,7 @@ import javax.inject.Singleton;
 @Singleton
 public class AccountLockingService {
 
-    private static final int MAX_LOCKS = 10000;
+    public static final int MAX_LOCKS = 10000;
 
     // maintain finite number of locks, use modulo to maintain reasonable space complexity
     // multiple accounts will then have the same lock, but this is better than using "synchronized"
