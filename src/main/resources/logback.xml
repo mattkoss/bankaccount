@@ -9,8 +9,34 @@
         </encoder>
     </appender>
 
+    <appender name="FILE"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+           
+        <file>bankaccount.log</file>
+           
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${log.dir}/aip-refdata-%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+
+            <!-- each file should be at most 10MB, keep 30 days worth of history, but at most 10GB -->
+            <maxFileSize>5MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>3GB</totalSizeCap>
+        </rollingPolicy>
+           
+        <encoder>
+            <pattern>%date %level [%thread] %logger{20}[%line]:
+                %msg%n
+            </pattern>
+        </encoder>
+         
+    </appender>
+
+
     <root level="WARN">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+
     </root>
 
     <!-- define levels for the packages -->
