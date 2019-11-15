@@ -47,6 +47,6 @@
     <!-- limit logging for some specific libraries -->
     <logger name="org.hibernate" level="WARN"/>
     <logger name="org.eclipse.jetty" level="INFO"/>
-    <logger name="org.eclipse.jetty.server.HttpChannel" level="DEBUG"/>
+    <!--    <logger name="org.eclipse.jetty.server.HttpChannel" level="INFO"/>-->
 
 </configuration>
