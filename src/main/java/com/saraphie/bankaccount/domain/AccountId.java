@@ -50,4 +50,5 @@ public class AccountId {
     public int hashCode() {
         return new HashCodeBuilder(17, 37).append(sortCode).append(accountNumber).toHashCode();
     }
+
 }

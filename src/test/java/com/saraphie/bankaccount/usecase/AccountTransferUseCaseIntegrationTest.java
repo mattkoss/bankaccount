@@ -1,9 +1,12 @@
 package com.saraphie.bankaccount.usecase;
 
 import java.math.BigDecimal;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.saraphie.bankaccount.dependency.BankAccountBinder;
 import com.saraphie.bankaccount.domain.Account;
@@ -83,6 +86,57 @@ class AccountTransferUseCaseIntegrationTest {
         assertEquals(new AccountBalance(new BigDecimal(balance1.getAmount().intValue() - 33), "GBP"),
                 account.getBalance());
         assertEquals(new AccountBalance(new BigDecimal(balance2.getAmount().intValue() + 33), "GBP"),
+                account2.getBalance());
+    }
+
+    @Test
+    @DisplayName("when 2 separate concurrent mirrored requests are executed, balances are correctly updated and deadlock does not happen")
+    void execute_concurrent_mirrored() {
+        final AccountId accountId = new AccountId("40-40-40", "12345678");
+        final AccountId accountId2 = new AccountId("50-50-50", "98765432");
+
+        Account account = accountRepository.getAccount(accountId);
+        AccountBalance balance1 = account.getBalance();
+        Account account2 = accountRepository.getAccount(accountId2);
+        AccountBalance balance2 = account2.getBalance();
+
+        final int THREAD_COUNT = 100;
+        final CountDownLatch latch = new CountDownLatch(THREAD_COUNT);
+
+        Runnable workflow1 = () -> {
+            TransferRequest request = new TransferRequest(accountId, accountId2, new BigDecimal("1"));
+
+            accountTransferUseCase.execute(request);
+            latch.countDown();
+        };
+
+        Runnable workflow2 = () -> {
+            TransferRequest request2 = new TransferRequest(accountId2, accountId, new BigDecimal("2"));
+
+            accountTransferUseCase.execute(request2);
+            latch.countDown();
+        };
+
+        boolean wfOne = true;
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            new Thread(wfOne
+                       ? workflow1
+                       : workflow2).start();
+            wfOne = !wfOne;
+        }
+
+        try {
+            boolean result = latch.await(1000, TimeUnit.MILLISECONDS);
+            assertTrue(result, "One of the threads deadlocked");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        account = accountRepository.getAccount(accountId);
+        account2 = accountRepository.getAccount(accountId2);
+        assertEquals(new AccountBalance(new BigDecimal(balance1.getAmount().intValue() + (THREAD_COUNT / 2)), "GBP"),
+                account.getBalance());
+        assertEquals(new AccountBalance(new BigDecimal(balance2.getAmount().intValue() - (THREAD_COUNT / 2)), "GBP"),
                 account2.getBalance());
     }
 

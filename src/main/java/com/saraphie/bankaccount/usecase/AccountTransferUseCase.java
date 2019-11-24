@@ -32,10 +32,22 @@ public class AccountTransferUseCase {
         LOG.info("Executing transfer: {}", transferRequest);
 
         // obtain locks for the source and target accounts
-        ReadWriteLock lock = accountLockingService.getAccountLock(transferRequest.getSourceAccount());
-        ReadWriteLock lock2 = accountLockingService.getAccountLock(transferRequest.getTargetAccount());
+        ReadWriteLock lockA = accountLockingService.getAccountLock(transferRequest.getSourceAccount());
+        ReadWriteLock lockB = accountLockingService.getAccountLock(transferRequest.getTargetAccount());
 
-        lock.writeLock().lock();
+        ReadWriteLock lock1 = null;
+        ReadWriteLock lock2 = null;
+
+        // order locks, so that locking always uses same order, this will prevent a deadlock situation
+        if (transferRequest.getSourceAccount().hashCode() < transferRequest.getTargetAccount().hashCode()) {
+            lock1 = lockA;
+            lock2 = lockB;
+        } else {
+            lock1 = lockB;
+            lock2 = lockA;
+        }
+
+        lock1.writeLock().lock();
         lock2.writeLock().lock();
         try {
             Account sourceAccount = accountRepository.getAccount(transferRequest.getSourceAccount());
@@ -52,7 +64,7 @@ public class AccountTransferUseCase {
 
         } finally {
             lock2.writeLock().unlock();
-            lock.writeLock().unlock();
+            lock1.writeLock().unlock();
         }
     }
 
