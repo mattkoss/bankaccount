@@ -103,6 +103,7 @@ class AccountTransferUseCaseIntegrationTest {
         final int THREAD_COUNT = 100;
         final CountDownLatch latch = new CountDownLatch(THREAD_COUNT);
 
+        // one workflow transfers from account1 to account2
         Runnable workflow1 = () -> {
             TransferRequest request = new TransferRequest(accountId, accountId2, new BigDecimal("1"));
 
@@ -110,6 +111,7 @@ class AccountTransferUseCaseIntegrationTest {
             latch.countDown();
         };
 
+        // other workflow transfers the other way around
         Runnable workflow2 = () -> {
             TransferRequest request2 = new TransferRequest(accountId2, accountId, new BigDecimal("2"));
 
@@ -117,6 +119,7 @@ class AccountTransferUseCaseIntegrationTest {
             latch.countDown();
         };
 
+        // create half threads with one workflow and the other half with the other workflow
         boolean wfOne = true;
         for (int i = 0; i < THREAD_COUNT; i++) {
             new Thread(wfOne
@@ -127,6 +130,7 @@ class AccountTransferUseCaseIntegrationTest {
 
         try {
             boolean result = latch.await(1000, TimeUnit.MILLISECONDS);
+            // none of the threads should time out, i.e. there should not be a deadlock
             assertTrue(result, "One of the threads deadlocked");
         } catch (InterruptedException e) {
             e.printStackTrace();
